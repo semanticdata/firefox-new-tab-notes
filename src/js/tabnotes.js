@@ -16,6 +16,7 @@ function logKey(e) {
   clearTimeout(timeoutId)
   timeoutId = setTimeout(function () {
     saveToDB()
+    saveToLocalStorage()
   }, 10)
 }
 
@@ -42,17 +43,25 @@ function saveToDB() {
   }
 }
 
+function saveToLocalStorage() {
+  localStorage.setItem('tab_note', document.querySelector('#notes').value)
+}
+
 function tabOpen(tab) {
   if (browser_type === 'Chrome') {
     chrome.storage.sync.get(['tab_note'], function (result) {
       if (typeof result.tab_note !== 'undefined') {
         document.querySelector('#notes').value = result.tab_note
+      } else {
+        document.querySelector('#notes').value = localStorage.getItem('tab_note')
       }
     })
   } else {
     browser_obj.storage.sync.get(['tab_note']).then((result) => {
       if (typeof result.tab_note !== 'undefined') {
         document.querySelector('#notes').value = result.tab_note
+      } else {
+        document.querySelector('#notes').value = localStorage.getItem('tab_note')
       }
     })
   }
